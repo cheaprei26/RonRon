@@ -1,49 +1,618 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-html {
-  height: 100%;
-}
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --bg: #f4f8fb;
+  --panel: #ffffff;
+  --line: #dce8ef;
+  --text: #17324a;
+  --muted: #72879a;
+  --blue: #5aa9df;
+  --blue-dark: #2b7db6;
+  --blue-soft: #eaf6fd;
+  --cyan: #92d9e8;
+  --red: #ef8b8b;
+  --red-soft: #fff1f1;
+  --green: #7ac7a1;
+  --shadow: 0 12px 34px rgba(50, 90, 120, 0.12);
 }
 
 * {
   box-sizing: border-box;
-  padding: 0;
+}
+
+html,
+body {
   margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background:
+    radial-gradient(circle at top left, rgba(132, 208, 241, 0.18), transparent 28%),
+    linear-gradient(180deg, #f7fbfe 0%, #eef5f9 100%);
+  color: var(--text);
+  font-family:
+    Arial,
+    "Hiragino Kaku Gothic ProN",
+    "Yu Gothic",
+    Meiryo,
+    sans-serif;
 }
 
+button {
+  font: inherit;
+}
+
+button,
 a {
-  color: inherit;
-  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+.app {
+  min-height: 100vh;
+  padding: 28px;
+}
+
+.topbar {
+  width: min(1500px, 100%);
+  margin: 0 auto 24px;
+  min-height: 86px;
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(214, 230, 239, 0.9);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(16px);
+}
+
+.brandRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brandMark {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  font-weight: 900;
+  color: white;
+  background: linear-gradient(135deg, #78c5ee, #3c8fc9);
+  box-shadow: 0 8px 18px rgba(61, 148, 204, 0.28);
+}
+
+.brandRow h1 {
+  margin: 0;
+  font-size: 28px;
+  letter-spacing: -0.04em;
+}
+
+.subtitle {
+  margin: 6px 0 0 54px;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+}
+
+.topActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.statusDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--green);
+  box-shadow: 0 0 0 5px rgba(122, 199, 161, 0.15);
+}
+
+.primaryButton,
+.secondaryButton,
+.autoButton,
+.confirmButton,
+.iconButton {
+  border: 0;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.primaryButton:hover,
+.secondaryButton:hover,
+.autoButton:hover,
+.confirmButton:hover,
+.iconButton:hover {
+  transform: translateY(-1px);
+}
+
+.primaryButton {
+  padding: 11px 18px;
+  border-radius: 12px;
+  color: white;
+  background: linear-gradient(135deg, #6dbce7, #3f91c8);
+  box-shadow: 0 8px 18px rgba(68, 145, 194, 0.22);
+}
+
+.hero {
+  width: min(1500px, 100%);
+  margin: 0 auto 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 30px;
+  padding: 12px 4px;
+}
+
+.hero h2 {
+  margin: 4px 0 10px;
+  font-size: clamp(32px, 4vw, 54px);
+  letter-spacing: -0.05em;
+}
+
+.hero p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.eyebrow {
+  margin: 0 0 4px !important;
+  color: var(--blue-dark) !important;
+  font-size: 11px !important;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+
+.heroButtons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.secondaryButton,
+.autoButton {
+  min-height: 48px;
+  padding: 0 20px;
+  border-radius: 14px;
+}
+
+.secondaryButton {
+  color: var(--blue-dark);
+  border: 1px solid #cfe4f1;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.autoButton {
+  color: white;
+  background: linear-gradient(135deg, #69bde9, #367fb9);
+  box-shadow: 0 10px 22px rgba(55, 126, 184, 0.22);
+}
+
+.dashboard {
+  width: min(1500px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 330px;
+  gap: 22px;
+  align-items: start;
+}
+
+.scheduleCard,
+.sideCard {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(212, 228, 238, 0.95);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+}
+
+.scheduleCard {
+  padding: 22px;
+  min-width: 0;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.cardHeader h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.legend {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.earlyDot {
+  background: #85c9ec;
+}
+
+.lateDot {
+  background: #91aee8;
+}
+
+.offDot {
+  background: #d9e2e8;
+}
+
+.requestDot {
+  background: #f1a3a3;
+}
+
+.tableScroll {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+}
+
+table {
+  width: 100%;
+  min-width: 1180px;
+  border-collapse: collapse;
+  background: white;
+}
+
+th,
+td {
+  border-right: 1px solid #edf2f5;
+  border-bottom: 1px solid #edf2f5;
+  text-align: center;
+}
+
+th:last-child,
+td:last-child {
+  border-right: 0;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+th {
+  height: 64px;
+  padding: 8px 6px;
+  color: #6f8292;
+  background: #f8fbfd;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+th strong,
+th small {
+  display: block;
+}
+
+th strong {
+  margin-bottom: 4px;
+  color: var(--text);
+  font-size: 16px;
+}
+
+th small {
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.staffColumn {
+  min-width: 170px;
+  text-align: left;
+  padding-left: 18px;
+}
+
+.saturday strong,
+.saturday small {
+  color: #4a8ec7;
+}
+
+.sunday strong,
+.sunday small {
+  color: #dc7f7f;
+}
+
+.staffName {
+  min-width: 170px;
+  padding: 11px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  background: #fbfdfe;
+}
+
+.avatar {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #dff3fc, #c9e7f5);
+  color: var(--blue-dark);
+  font-weight: 900;
+}
+
+.staffName strong,
+.staffName small {
+  display: block;
+}
+
+.staffName strong {
+  font-size: 14px;
+}
+
+.staffName small {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+td {
+  height: 62px;
+  padding: 6px;
+}
+
+.shiftCell {
+  width: 100%;
+  min-width: 48px;
+  height: 42px;
+  padding: 0 7px;
+  border: 0;
+  border-radius: 11px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 800;
+  transition:
+    transform 0.14s ease,
+    filter 0.14s ease;
+}
+
+.shiftCell:hover {
+  transform: translateY(-2px);
+  filter: brightness(0.98);
+}
+
+.shiftCell.early {
+  color: #247aac;
+  background: #e0f3fd;
+}
+
+.shiftCell.late {
+  color: #5872b6;
+  background: #e8ecfc;
+}
+
+.shiftCell.off {
+  color: #8698a6;
+  background: #f0f3f5;
+}
+
+.shiftCell.request {
+  color: #c96e6e;
+  background: #fdeaea;
+}
+
+.shiftCell.empty {
+  color: #a4b1bc;
+  background: #f7fafb;
+}
+
+.workCount {
+  min-width: 72px;
+  color: var(--muted);
+  background: #fbfdfe;
+}
+
+.workCount strong {
+  color: var(--text);
+  font-size: 17px;
+}
+
+.workCount span {
+  margin-left: 3px;
+  font-size: 11px;
+}
+
+.tableHint {
+  margin: 14px 2px 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.sidePanel {
+  display: grid;
+  gap: 18px;
+}
+
+.sideCard {
+  padding: 20px;
+}
+
+.iconButton {
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  color: var(--blue-dark);
+  background: var(--blue-soft);
+  font-size: 18px;
+}
+
+.rule {
+  display: flex;
+  gap: 12px;
+  padding: 13px 0;
+  border-top: 1px solid #edf2f5;
+}
+
+.rule:first-of-type {
+  border-top: 0;
+}
+
+.ruleIcon {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: var(--blue-soft);
+  color: var(--blue-dark);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.ruleIcon.danger {
+  color: #c65c5c;
+  background: var(--red-soft);
+}
+
+.rule strong {
+  display: block;
+  font-size: 13px;
+}
+
+.rule p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.alertCard {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 249, 249, 0.98));
+}
+
+.alertCount {
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  color: white;
+  background: var(--red);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.alertItem {
+  padding: 13px 0;
+  border-top: 1px solid #f2e4e4;
+}
+
+.alertItem:first-of-type {
+  border-top: 0;
+}
+
+.alertItem strong {
+  color: #bb6565;
+  font-size: 12px;
+}
+
+.alertItem p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.confirmButton {
+  min-height: 56px;
+  border-radius: 17px;
+  color: white;
+  background: linear-gradient(135deg, #67b9e4, #347eb6);
+  box-shadow: 0 12px 26px rgba(55, 126, 184, 0.24);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+@media (max-width: 1100px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .sidePanel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .confirmButton {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 760px) {
+  .app {
+    padding: 14px;
+  }
+
+  .topbar,
+  .hero {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .topActions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .heroButtons {
+    width: 100%;
+  }
+
+  .secondaryButton,
+  .autoButton {
+    flex: 1;
+  }
+
+  .sidePanel {
+    grid-template-columns: 1fr;
+  }
+
+  .confirmButton {
+    grid-column: auto;
+  }
+
+  .scheduleCard {
+    padding: 14px;
+  }
+
+  .cardHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .subtitle {
+    margin-left: 0;
   }
 }

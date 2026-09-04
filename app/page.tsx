@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 type Shift = "早番" | "遅番" | "休み" | "希望休" | "";
 
@@ -9,6 +9,13 @@ type Staff = {
   name: string;
   target: number;
   shifts: Shift[];
+};
+
+type NgAlert = {
+  date: number;
+  shift: "早番" | "遅番";
+  personA: string;
+  personB: string;
 };
 
 const days = [
@@ -33,37 +40,127 @@ const initialStaff: Staff[] = [
     id: 1,
     name: "山田",
     target: 10,
-    shifts: ["早番", "早番", "休み", "遅番", "早番", "休み", "休み", "早番", "遅番", "早番", "休み", "早番", "休み", "休み"],
+    shifts: [
+      "早番",
+      "早番",
+      "休み",
+      "遅番",
+      "早番",
+      "休み",
+      "休み",
+      "早番",
+      "遅番",
+      "早番",
+      "休み",
+      "早番",
+      "休み",
+      "休み",
+    ],
   },
   {
     id: 2,
     name: "佐藤",
     target: 8,
-    shifts: ["遅番", "休み", "早番", "早番", "休み", "遅番", "休み", "遅番", "早番", "休み", "早番", "休み", "遅番", "休み"],
+    shifts: [
+      "遅番",
+      "休み",
+      "早番",
+      "早番",
+      "休み",
+      "遅番",
+      "休み",
+      "遅番",
+      "早番",
+      "休み",
+      "早番",
+      "休み",
+      "遅番",
+      "休み",
+    ],
   },
   {
     id: 3,
     name: "田中",
     target: 9,
-    shifts: ["休み", "早番", "遅番", "休み", "早番", "早番", "休み", "休み", "遅番", "早番", "休み", "遅番", "早番", "休み"],
+    shifts: [
+      "休み",
+      "早番",
+      "遅番",
+      "休み",
+      "早番",
+      "早番",
+      "休み",
+      "休み",
+      "遅番",
+      "早番",
+      "休み",
+      "遅番",
+      "早番",
+      "休み",
+    ],
   },
   {
     id: 4,
     name: "鈴木",
     target: 7,
-    shifts: ["早番", "休み", "休み", "早番", "遅番", "休み", "早番", "遅番", "休み", "休み", "早番", "早番", "休み", "遅番"],
+    shifts: [
+      "早番",
+      "休み",
+      "休み",
+      "早番",
+      "遅番",
+      "休み",
+      "早番",
+      "遅番",
+      "休み",
+      "休み",
+      "早番",
+      "早番",
+      "休み",
+      "遅番",
+    ],
   },
   {
     id: 5,
     name: "高橋",
     target: 8,
-    shifts: ["休み", "遅番", "早番", "休み", "早番", "遅番", "休み", "早番", "休み", "早番", "遅番", "休み", "早番", "休み"],
+    shifts: [
+      "休み",
+      "遅番",
+      "早番",
+      "休み",
+      "早番",
+      "遅番",
+      "休み",
+      "早番",
+      "休み",
+      "早番",
+      "遅番",
+      "休み",
+      "早番",
+      "休み",
+    ],
   },
   {
     id: 6,
     name: "伊藤",
     target: 6,
-    shifts: ["早番", "休み", "遅番", "早番", "休み", "休み", "遅番", "休み", "早番", "休み", "早番", "遅番", "休み", "休み"],
+    shifts: [
+      "早番",
+      "休み",
+      "遅番",
+      "早番",
+      "休み",
+      "休み",
+      "遅番",
+      "休み",
+      "早番",
+      "休み",
+      "早番",
+      "遅番",
+      "休み",
+      "休み",
+    ],
   },
 ];
 
@@ -73,6 +170,11 @@ export default function Home() {
   const [staff, setStaff] = useState(initialStaff);
   const [message, setMessage] = useState("シフト案を編集中です");
 
+  const countWork = (person: Staff) =>
+    person.shifts.filter(
+      (shift) => shift === "早番" || shift === "遅番"
+    ).length;
+
   const changeShift = (staffId: number, dayIndex: number) => {
     setStaff((current) =>
       current.map((person) => {
@@ -80,19 +182,87 @@ export default function Home() {
 
         const shifts = [...person.shifts];
         const currentIndex = shiftOrder.indexOf(shifts[dayIndex]);
+
         shifts[dayIndex] =
           shiftOrder[(currentIndex + 1) % shiftOrder.length];
 
-        return { ...person, shifts };
+        return {
+          ...person,
+          shifts,
+        };
       })
     );
+
     setMessage("変更内容があります");
   };
 
-  const countWork = (person: Staff) =>
-    person.shifts.filter(
-      (shift) => shift === "早番" || shift === "遅番"
-    ).length;
+  const ngAlerts = useMemo<NgAlert[]>(() => {
+    const sato = staff.find((person) => person.name === "佐藤");
+    const tanaka = staff.find((person) => person.name === "田中");
+
+    if (!sato || !tanaka) return [];
+
+    const alerts: NgAlert[] = [];
+
+    days.forEach((day, index) => {
+      const satoShift = sato.shifts[index];
+      const tanakaShift = tanaka.shifts[index];
+
+      if (
+        satoShift === tanakaShift &&
+        (satoShift === "早番" || satoShift === "遅番")
+      ) {
+        alerts.push({
+          date: day.date,
+          shift: satoShift,
+          personA: "佐藤",
+          personB: "田中",
+        });
+      }
+    });
+
+    return alerts;
+  }, [staff]);
+
+  const shortageAlerts = useMemo(() => {
+    const alerts: string[] = [];
+
+    days.forEach((day, index) => {
+      const earlyCount = staff.filter(
+        (person) => person.shifts[index] === "早番"
+      ).length;
+
+      const lateCount = staff.filter(
+        (person) => person.shifts[index] === "遅番"
+      ).length;
+
+      if (earlyCount < 2) {
+        alerts.push(
+          `9月${day.date}日：早番が${earlyCount}名です`
+        );
+      }
+
+      if (lateCount < 2) {
+        alerts.push(
+          `9月${day.date}日：遅番が${lateCount}名です`
+        );
+      }
+    });
+
+    return alerts;
+  }, [staff]);
+
+  const targetAlerts = useMemo(() => {
+    return staff
+      .filter((person) => countWork(person) < person.target)
+      .map(
+        (person) =>
+          `${person.name}さん：${countWork(person)} / ${person.target}回`
+      );
+  }, [staff]);
+
+  const totalAlertCount =
+    ngAlerts.length + shortageAlerts.length + targetAlerts.length;
 
   return (
     <main className="app">
@@ -108,6 +278,7 @@ export default function Home() {
         <div className="topActions">
           <span className="statusDot"></span>
           <span>{message}</span>
+
           <button
             className="primaryButton"
             onClick={() => setMessage("シフトを保存しました")}
@@ -128,10 +299,15 @@ export default function Home() {
         </div>
 
         <div className="heroButtons">
-          <button className="secondaryButton">希望シフト入力</button>
+          <button className="secondaryButton">
+            希望シフト入力
+          </button>
+
           <button
             className="autoButton"
-            onClick={() => setMessage("自動作成を実行しました")}
+            onClick={() =>
+              setMessage("自動作成機能はこれから実装します")
+            }
           >
             ✦ 自動作成
           </button>
@@ -147,10 +323,22 @@ export default function Home() {
             </div>
 
             <div className="legend">
-              <span><i className="earlyDot"></i>早番</span>
-              <span><i className="lateDot"></i>遅番</span>
-              <span><i className="offDot"></i>休み</span>
-              <span><i className="requestDot"></i>希望休</span>
+              <span>
+                <i className="earlyDot"></i>
+                早番
+              </span>
+              <span>
+                <i className="lateDot"></i>
+                遅番
+              </span>
+              <span>
+                <i className="offDot"></i>
+                休み
+              </span>
+              <span>
+                <i className="requestDot"></i>
+                希望休
+              </span>
             </div>
           </div>
 
@@ -159,6 +347,7 @@ export default function Home() {
               <thead>
                 <tr>
                   <th className="staffColumn">スタッフ</th>
+
                   {days.map((day) => (
                     <th
                       key={day.date}
@@ -174,6 +363,7 @@ export default function Home() {
                       <small>{day.day}</small>
                     </th>
                   ))}
+
                   <th>勤務</th>
                 </tr>
               </thead>
@@ -185,6 +375,7 @@ export default function Home() {
                       <div className="avatar">
                         {person.name.slice(0, 1)}
                       </div>
+
                       <div>
                         <strong>{person.name}</strong>
                         <small>目標 {person.target}回</small>
@@ -225,7 +416,9 @@ export default function Home() {
           </div>
 
           <p className="tableHint">
-            シフト枠をクリックすると「早番 → 遅番 → 休み → 希望休」と変更できます。
+            シフト枠をクリックすると
+            「空欄 → 早番 → 遅番 → 休み → 希望休」
+            の順で変更できます。
           </p>
         </div>
 
@@ -236,6 +429,7 @@ export default function Home() {
                 <p className="eyebrow">RULES</p>
                 <h3>シフト条件</h3>
               </div>
+
               <button className="iconButton">＋</button>
             </div>
 
@@ -278,28 +472,80 @@ export default function Home() {
                 <p className="eyebrow">CHECK</p>
                 <h3>シフトチェック</h3>
               </div>
-              <span className="alertCount">3</span>
+
+              <span className="alertCount">
+                {totalAlertCount}
+              </span>
             </div>
 
-            <div className="alertItem">
-              <strong>⚠ 人数不足</strong>
-              <p>9月4日の遅番が1名です</p>
-            </div>
+            {ngAlerts.length === 0 ? (
+              <div className="alertItem">
+                <strong>✓ NG組み合わせなし</strong>
+                <p>
+                  佐藤さんと田中さんは
+                  同じ時間帯に配置されていません。
+                </p>
+              </div>
+            ) : (
+              ngAlerts.map((alert) => (
+                <div
+                  className="alertItem"
+                  key={`ng-${alert.date}-${alert.shift}`}
+                >
+                  <strong>⚠ NG組み合わせ</strong>
+                  <p>
+                    9月{alert.date}日：
+                    {alert.personA}さん × {alert.personB}さんが
+                    同じ{alert.shift}です
+                  </p>
+                </div>
+              ))
+            )}
 
-            <div className="alertItem">
-              <strong>⚠ NG組み合わせ</strong>
-              <p>佐藤さんと田中さんを確認してください</p>
-            </div>
+            {shortageAlerts.slice(0, 4).map((alert) => (
+              <div
+                className="alertItem"
+                key={alert}
+              >
+                <strong>⚠ 人数不足</strong>
+                <p>{alert}</p>
+              </div>
+            ))}
 
-            <div className="alertItem">
-              <strong>⚠ 勤務回数</strong>
-              <p>山田さんが目標回数に達していません</p>
-            </div>
+            {targetAlerts.slice(0, 3).map((alert) => (
+              <div
+                className="alertItem"
+                key={alert}
+              >
+                <strong>⚠ 勤務回数</strong>
+                <p>{alert}</p>
+              </div>
+            ))}
+
+            {totalAlertCount === 0 && (
+              <div className="alertItem">
+                <strong>✓ 問題ありません</strong>
+                <p>
+                  現在のシフトに警告はありません。
+                </p>
+              </div>
+            )}
           </div>
 
           <button
             className="confirmButton"
-            onClick={() => setMessage("2026年9月のシフトを確定しました")}
+            onClick={() => {
+              if (totalAlertCount > 0) {
+                setMessage(
+                  `警告が${totalAlertCount}件あります`
+                );
+                return;
+              }
+
+              setMessage(
+                "2026年9月のシフトを確定しました"
+              );
+            }}
           >
             このシフトで確定する
           </button>

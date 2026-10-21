@@ -615,4 +615,62 @@ td {
   .subtitle {
     margin-left: 0;
   }
+}/* RonRon: app/globals.css の末尾に追加するスマホ最適化CSS */
+.tableScroll { -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+.tableScroll table { border-collapse: separate; border-spacing: 0; }
+.tableScroll thead th:first-child,
+.tableScroll tbody td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: #fbfdfe;
+  box-shadow: 2px 0 5px rgba(23, 50, 74, .06);
+}
+.tableScroll thead th:first-child { z-index: 3; background: #f8fbfd; }
+.shiftCell:focus-visible, .primaryButton:focus-visible,
+.secondaryButton:focus-visible, .autoButton:focus-visible,
+.confirmButton:focus-visible, .iconButton:focus-visible {
+  outline: 3px solid #2b7db6;
+  outline-offset: 2px;
+}
+@media (max-width: 760px) {
+  .app { padding: 12px; }
+  .topbar { padding: 14px; border-radius: 18px; gap: 14px; margin-bottom: 16px; }
+  .brandRow h1 { font-size: 24px; }
+  .hero { gap: 16px; margin-bottom: 16px; }
+  .hero h2 { font-size: clamp(26px, 7vw, 36px); }
+  .heroButtons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .heroButtons .autoButton { grid-column: 1 / -1; }
+  .heroButtons button { width: 100%; min-width: 0; min-height: 48px; padding: 10px 8px; }
+  .topActions { gap: 10px; }
+  .topActions .primaryButton { margin-left: auto; min-height: 44px; }
+  .dashboard { gap: 14px; }
+  .scheduleCard, .sideCard { border-radius: 18px; }
+  .scheduleCard { padding: 12px; }
+  .cardHeader { gap: 10px; margin-bottom: 12px; }
+  .cardHeader h3 { font-size: 18px; }
+  .legend { gap: 8px 12px; }
+  .tableScroll { border-radius: 12px; }
+  .tableScroll table { min-width: 980px; }
+  .tableScroll th { height: 54px; }
+  .tableScroll td { height: 56px; padding: 4px; }
+  .tableScroll .staffColumn, .tableScroll .staffName { min-width: 115px; width: 115px; }
+  .tableScroll .staffColumn { padding-left: 8px; }
+  .tableScroll .staffName { padding: 7px 6px; gap: 6px; }
+  .tableScroll .staffName strong { font-size: 12px; }
+  .tableScroll .avatar { width: 28px; height: 28px; border-radius: 9px; font-size: 12px; }
+  .tableScroll .shiftCell { min-width: 46px; min-height: 44px; height: 44px; padding: 0 3px; font-size: 11px; }
+  .tableHint { line-height: 1.6; }
+  .sidePanel { gap: 14px; }
+  .sideCard { padding: 16px; }
+  .confirmButton { min-height: 54px; }
+}
+@media (max-width: 380px) {
+  .heroButtons { grid-template-columns: 1fr; }
+  .heroButtons .autoButton { grid-column: auto; }
+  .topActions { font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shiftCell, .primaryButton, .secondaryButton, .autoButton,
+  .confirmButton, .iconButton { transition: none; }
 }
